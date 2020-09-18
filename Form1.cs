@@ -29,38 +29,93 @@ namespace dmconverter
 
         private void button1_Click(object sender, EventArgs e)
         {
-			using (var package = new ExcelPackage())
-			{
-				ExcelWorksheet sheet = package.Workbook.Worksheets.Add("MySheet");
 
-				// Setting & getting values
-				ExcelRange firstCell = sheet.Cells[1, 1];
-				firstCell.Value = "will it work?";
-				sheet.Cells["A2"].Formula = "CONCATENATE(A1,\" ... Of course it will!\")";
-				//Assert.That(firstCell.Text, Is.EqualTo("will it work?"));
+            using (ExcelPackage excelPackage = new ExcelPackage())
+            {
+                //Set some properties of the Excel document
+                excelPackage.Workbook.Properties.Author = "VDWWD";
+                excelPackage.Workbook.Properties.Title = "Title of Document";
+                excelPackage.Workbook.Properties.Subject = "EPPlus demo export data";
+                excelPackage.Workbook.Properties.Created = DateTime.Now;
+                //Create the WorkSheet
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
+                //Add some text to cell A1
+                worksheet.Cells["A1"].Value = "My first EPPlus spreadsheet!";
+                //You could also use [line, column] notation:
+                worksheet.Cells[1, 2].Value = "This is cell B1!";
+                //Save your file
+                FileInfo fi = new FileInfo(@"D:\für Arbeit\DmConverter\dmconverter\bin\Debug\File.xlsx");
+                excelPackage.SaveAs(fi);
+            }
 
-				// Numbers
-				var moneyCell = sheet.Cells["A3"];
-				moneyCell.Style.Numberformat.Format = "$#,##0.00";
-				moneyCell.Value = 15.25M;
+            FileInfo fi_ = new FileInfo(@"D:\für Arbeit\DmConverter\dmconverter\bin\Debug\File.xlsx");
+            using (ExcelPackage excelPackage = new ExcelPackage(fi_))
+            {
+                //Get a WorkSheet by index. Note that EPPlus indexes are base 1, not base 0!
+                ExcelWorksheet firstWorksheet = excelPackage.Workbook.Worksheets[1];
+                //Get a WorkSheet by name. If the worksheet doesn't exist, throw an exeption
+                ExcelWorksheet namedWorksheet = excelPackage.Workbook.Worksheets["SomeWorksheet"];
+                //If you don't know if a worksheet exists, you could use LINQ,
+                //So it doesn't throw an exception, but return null in case it doesn't find it
+                ExcelWorksheet anotherWorksheet =
+                excelPackage.Workbook.Worksheets.FirstOrDefault(x => x.Name == "SomeWorksheet");
+                //Get the content from cells A1 and B1 as string, in two different notations
+                string valA1 = firstWorksheet.Cells["A1"].Value.ToString();
+                string valB1 = firstWorksheet.Cells[1, 2].Value.ToString();
+                //Save your file
+                excelPackage.Save();
+            }
 
-				// Easily write any Enumerable to a sheet
-				// In this case: All Excel functions implemented by EPPlus
-				var funcs = package.Workbook.FormulaParserManager.GetImplementedFunctions()
-					.Select(x => new { FunctionName = x.Key, TypeName = x.Value.GetType().FullName });
-				sheet.Cells["A4"].LoadFromCollection(funcs, true);
 
-				// Styling cells
-				var someCells = sheet.Cells["A1,A4:B4"];
-				someCells.Style.Font.Bold = true;
-				someCells.Style.Font.Color.SetColor(Color.Ivory);
-				someCells.Style.Fill.PatternType = ExcelFillStyle.Solid;
-				someCells.Style.Fill.BackgroundColor.SetColor(Color.Navy);
 
-				sheet.Cells.AutoFitColumns();
-				package.SaveAs(new FileInfo(@"basicUsage.xslx"));
-			}
+            //the path of the file
+            string filePath = "D:\\für Arbeit\\DmConverter\\dmconverter\\bin\\Debug\\File.xlsx";
+            
+            //create a fileinfo object of an excel file on the disk
+            FileInfo file = new FileInfo(filePath);
+            //create a new Excel package from the file
+            using (ExcelPackage excelPackage = new ExcelPackage(file))
+            {
+                //create an instance of the the first sheet in the loaded file
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets[1];
+                //add some data
+                worksheet.Cells[4, 1].Value = "Added data in Cell A4";
+                worksheet.Cells[4, 2].Value = "Added data in Cell B4";
+                //save the changes
+                excelPackage.Save();
+            }
 
-		}
+
+
+            //create a list to hold all the values
+            List<string> excelData = new List<string>();
+            //read the Excel file as byte array
+            byte[] bin = File.ReadAllBytes("D:\\für Arbeit\\DmConverter\\dmconverter\\bin\\Debug\\File.xlsx");
+            
+            //create a new Excel package in a memorystream
+            using (MemoryStream stream = new MemoryStream(bin))
+            using (ExcelPackage excelPackage = new ExcelPackage(stream))
+            {
+                //loop all worksheets
+                foreach (ExcelWorksheet worksheet in excelPackage.Workbook.Worksheets)
+                {
+                    //loop all rows
+                    for (int i = worksheet.Dimension.Start.Row; i <= worksheet.Dimension.End.Row; i++)
+                    {
+                        //loop all columns in a row
+                        for (int j = worksheet.Dimension.Start.Column; j <=
+                       worksheet.Dimension.End.Column; j++)
+                        {
+                            //add the cell data to the List
+                            if (worksheet.Cells[i, j].Value != null)
+                            {
+                                excelData.Add(worksheet.Cells[i, j].Value.ToString());
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }
