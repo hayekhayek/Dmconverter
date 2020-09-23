@@ -37,7 +37,15 @@ namespace dmconverter
                 excelPackage.Workbook.Properties.Title = "Data Manager";            
                 excelPackage.Workbook.Properties.Created = DateTime.Now;
                 //Create the WorkSheet
-                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Sheet 1");
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("FeriSpec");
+                ExcelWorksheet worksheet1 = excelPackage.Workbook.Worksheets.Add("Tabelle1");
+
+                ExcelRange range = worksheet1.Cells["A1"];           // ws is the worksheet name
+                //ws.Cells["A1"].Value = "Name";
+                string sNamedRange = "FeriTable1";
+                //worksheet1.Names.Add(sNamedRange, range);
+                excelPackage.Workbook.Names.Add(sNamedRange, range);
+
                 //Standards Cells
                 worksheet.Cells["A1"].Value = "TableSpec";
                 worksheet.Cells["A2"].Value = "CoreSpec";
@@ -63,7 +71,7 @@ namespace dmconverter
                 worksheet.Cells["I2"].Value = "TitleBackColor=8404992";
                 worksheet.Cells["J2"].Value = "IntegratedSpec=No";
                 worksheet.Cells["K2"].Value = "RecreateView=Yes";
-                worksheet.Cells["K2"].Value = "RecreateView";
+                
 
 
                 //Save your file
