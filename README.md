@@ -1,1 +1,1 @@
-# dmconverter ist ein Converter von neues Data Manager zum alten Data Manager
+# Dmconverter ist ein Converter von web Data Manager zum alten Data Manager
