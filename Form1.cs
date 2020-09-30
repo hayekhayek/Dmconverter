@@ -15,6 +15,7 @@ using OfficeOpenXml.Style;
 
 
 //https://itenium.be/blog/dotnet/create-xlsx-excel-with-epplus-csharp/
+//https://www.programmersought.com/article/4453654835/
 namespace dmconverter
 {
     public partial class Form1 : Form
@@ -34,7 +35,7 @@ namespace dmconverter
             {
                 //Set some properties of the Excel document
                 excelPackage.Workbook.Properties.Author = "Feri";
-                excelPackage.Workbook.Properties.Title = "Data Manager";            
+                excelPackage.Workbook.Properties.Title = "Data Manager";
                 excelPackage.Workbook.Properties.Created = DateTime.Now;
                 //Create the WorkSheet
                 ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("FeriSpec");
@@ -54,13 +55,13 @@ namespace dmconverter
                 worksheet.Cells["A5"].Value = "Info";
                 worksheet.Cells["A6"].Value = "Info";
                 worksheet.Cells["A7"].Value = "TimeFrame";
-                worksheet.Cells["A8"].Value = "DataSpecs";
+
                 worksheet.Cells["A9"].Value = "DataSpec";
                 worksheet.Cells["A10"].Value = "DataSpec";
                 worksheet.Cells["A11"].Value = "End";
-                
+
                 worksheet.Cells["B1"].Value = "FeriTable1";
-               
+
                 worksheet.Cells["B2"].Value = "Title=Unbenannt";
                 worksheet.Cells["C2"].Value = "Type=Col";
                 worksheet.Cells["D2"].Value = "UseSettings=Yes";
@@ -71,14 +72,53 @@ namespace dmconverter
                 worksheet.Cells["I2"].Value = "TitleBackColor=8404992";
                 worksheet.Cells["J2"].Value = "IntegratedSpec=No";
                 worksheet.Cells["K2"].Value = "RecreateView=Yes";
-                
+                worksheet.Cells["B4"].Value = "Type=Title";
+                worksheet.Cells["B5"].Value = "Type=DataField";
+                worksheet.Cells["B6"].Value = "Type=Transform";
+                worksheet.Cells["B7"].Value = "Type=Customized";
+                worksheet.Cells["C5"].Value = "DataField=Description";
+                worksheet.Cells["C7"].Value = "TargetFrequency=Monthly";
+                worksheet.Cells["D7"].Value = "PeriodsAscending=Yes";
 
+                worksheet.Cells["A8"].Value = "DataSpecs";
+                worksheet.Cells["B8"].Value = "Type";
+                worksheet.Cells["C8"].Value = "Database";
+                worksheet.Cells["D8"].Value = "Table";
+                worksheet.Cells["E8"].Value = "Series";
+                worksheet.Cells["F8"].Value = "Trans";
+                worksheet.Cells["G8"].Value = "SeriesTitle";
+                worksheet.Cells["H8"].Value = "SeriesSubtitle";
+                worksheet.Cells["I8"].Value = "Aggregation";
+                worksheet.Cells["J8"].Value = "Disaggregation";
+                worksheet.Cells["K8"].Value = "UpdateControl";
+                worksheet.Cells["L8"].Value = "ExportControl";
+                worksheet.Cells["M8"].Value = "Precision";
 
-                //Save your file
-                FileInfo fi = new FileInfo(@"O:\Mitarbeiter\Henninger, Dirk\Allgemein\Studenten\Jihad\!DM_Converter\dmconverter\bin\Debug\File.xlsx");
-                excelPackage.SaveAs(fi);
+                //DM_web Excel Reading 
+
+                String readfile = "O:\\Mitarbeiter\\Henninger, Dirk\\Allgemein\\Studenten\\Jihad\\!DM_Converter\\dmconverter\\DM_Web.xlsx";
+
+                FileInfo fileInfo = new FileInfo(readfile);
+                ExcelPackage package = new ExcelPackage(fileInfo);
+                ExcelWorksheet WS = package.Workbook.Worksheets.FirstOrDefault();
+                int rows = worksheet.Dimension.Rows; // 20
+                int columns = worksheet.Dimension.Columns; // 7
+
+                for (int i = 1; i <= rows; i++)
+                {
+                    for (int j = 1; j <= columns; j++)
+                    {
+
+                        string content = worksheet.Cells[i, j].Value.ToString();
+                        /* Do something ...*/
+                    }
+                    //worksheet.Cells.AutoFitColumns();
+
+                    //Save your file
+                    FileInfo fi = new FileInfo(@"O:\Mitarbeiter\Henninger, Dirk\Allgemein\Studenten\Jihad\!DM_Converter\dmconverter\bin\Debug\File.xlsx");
+                    excelPackage.SaveAs(fi);
+                }
             }
-
             //FileInfo fi_ = new FileInfo(@"D:\für Arbeit\DmConverter\dmconverter\bin\Debug\File.xlsx");
             //using (ExcelPackage excelPackage = new ExcelPackage(fi_))
             //{
@@ -131,7 +171,7 @@ namespace dmconverter
             //create a list to hold all the values
             List<string> excelData = new List<string>();
             //read the Excel file as byte array
-            byte[] bin = File.ReadAllBytes("O:\\Mitarbeiter\\Henninger, Dirk\\Allgemein\\Studenten\\Jihad\\!DM_Converter\\dmconverter\\bin\\File.xlsx");
+            byte[] bin = File.ReadAllBytes("O:\\Mitarbeiter\\Henninger, Dirk\\Allgemein\\Studenten\\Jihad\\!DM_Converter\\dmconverter\\bin\\Debug\\File.xlsx");
             
             //create a new Excel package in a memorystream
             using (MemoryStream stream = new MemoryStream(bin))
