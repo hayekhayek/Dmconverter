@@ -8,11 +8,14 @@ using Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 
 
 //https://itenium.be/blog/dotnet/create-xlsx-excel-with-epplus-csharp/
 //https://www.programmersought.com/article/4453654835/
 //https://www.xspdf.com/resolution/52117722.html
+//https://stackoverflow.com/questions/42042662/c-sharp-trying-to-split-a-string-to-get-json-object-value/50362239
 namespace dmconverter
 {
     public partial class Form1 : Form
@@ -60,7 +63,7 @@ namespace dmconverter
                 worksheet.Cells["B1"].Value = "FeriTable1";
 
                 worksheet.Cells["B2"].Value = "Title=Unbenannt";
-                worksheet.Cells["C2"].Value = "Type=Col";
+                //worksheet.Cells["C2"].Value = "Type=Col";
                 worksheet.Cells["D2"].Value = "UseSettings=Yes";
                 worksheet.Cells["E2"].Value = "ExcelFormat=Yes";
                 worksheet.Cells["F2"].Value = "DataForeColor=4194432";
@@ -101,9 +104,13 @@ namespace dmconverter
                 ExcelWorksheet WS_2 = package.Workbook.Worksheets[2];   //Select sheet FeDaX_Table
                 ExcelWorksheet WS_3 = package.Workbook.Worksheets[3];   //Select sheet für das Country als SeriesTitel && für SeriesSubtitle zu builden 
 
-                
 
+               //WS_2.Cells["C2"].Copy(worksheet.Cells["C2"]);
+                worksheet.Cells["C2"].Value = "Type=" + WS_2.Cells["C2"].Value;
 
+                string input = WS_1.Cells["C5"].Text;
+                //input = input.Remove('');
+                JArray a = JArray.Parse(json);
 
 
                 FileInfo fi = new FileInfo(@"O:\Mitarbeiter\Henninger, Dirk\Allgemein\Studenten\Jihad\!DM_Converter\dmconverter\bin\Debug\File.xlsx");
