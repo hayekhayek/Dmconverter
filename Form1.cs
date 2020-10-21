@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -95,109 +91,68 @@ namespace dmconverter
                 worksheet.Cells["L8"].Value = "ExportControl";
                 worksheet.Cells["M8"].Value = "Precision";
 
-                //DM_web Excel Reading 
+                //DM_web Excel Reading
 
                 String readfile = "O:\\Mitarbeiter\\Henninger, Dirk\\Allgemein\\Studenten\\Jihad\\!DM_Converter\\dmconverter\\DM_Web.xlsx";
 
                 FileInfo fileInfo = new FileInfo(readfile);
                 ExcelPackage package = new ExcelPackage(fileInfo);
-                ExcelWorksheet WS = package.Workbook.Worksheets.FirstOrDefault();
-                int rows = worksheet.Dimension.Rows; // 20
-                int columns = worksheet.Dimension.Columns; // 7
+                ExcelWorksheet WS_1 = package.Workbook.Worksheets[1];   //Select sheet FeDaX_Spec
+                ExcelWorksheet WS_2 = package.Workbook.Worksheets[2];   //Select sheet FeDaX_Table
+                ExcelWorksheet WS_3 = package.Workbook.Worksheets[3];   //Select sheet für das Country als SeriesTitel && für SeriesSubtitle zu builden 
 
-                for (int i = 1; i <= rows; i++)
-                {
-                    for (int j = 1; j <= columns; j++)
-                    {
+                
 
-                        string content = worksheet.Cells[i, j].Value.ToString();
-                        /* Do something ...*/
-                    }
-                    //worksheet.Cells.AutoFitColumns();
 
-                    //Save your file
-                    FileInfo fi = new FileInfo(@"O:\Mitarbeiter\Henninger, Dirk\Allgemein\Studenten\Jihad\!DM_Converter\dmconverter\bin\Debug\File.xlsx");
+
+
+                FileInfo fi = new FileInfo(@"O:\Mitarbeiter\Henninger, Dirk\Allgemein\Studenten\Jihad\!DM_Converter\dmconverter\bin\Debug\File.xlsx");
                     excelPackage.SaveAs(fi);
-                }
+                
+
+
+
+                //    ExcelWorksheet sheet = package.Workbook.Worksheets.Add("MySheet");
+
+                //    // One cell
+                //    ExcelRange cellA2 = sheet.Cells["A2"];
+                //    var alsoCellA2 = sheet.Cells[2, 1];
+                //    Assert.That(cellA2.Address, Is.EqualTo("A2"));
+                //    Assert.That(cellA2.Address, Is.EqualTo(alsoCellA2.Address));
+
+                //    // Column from a cell
+                //    // ExcelRange.Start is the top and left most cell
+                //    Assert.That(cellA2.Start.Column, Is.EqualTo(1));
+                //    // To really get the column: sheet.Column(1)
+
+                //    // A range
+                //    ExcelRange ranger = sheet.Cells["A2:C5"];
+                //    var sameRanger = sheet.Cells[2, 1, 5, 3];
+                //    Assert.That(ranger.Address, Is.EqualTo(sameRanger.Address));
+
+                //    //sheet.Cells["A1,A4"] // Just A1 and A4
+                //    //sheet.Cells["1:1"] // A row
+                //    //sheet.Cells["A:B"] // Two columns
+
+                //    // Linq
+                //    var l = sheet.Cells["A1:A5"].Where(range => range.Comment != null);
+
+                //    // Dimensions used
+                //    Assert.That(sheet.Dimension, Is.Null);
+
+                //    ranger.Value = "pushing";
+                //    var usedDimensions = sheet.Dimension;
+                //    Assert.That(usedDimensions.Address, Is.EqualTo(ranger.Address));
+
+                //    // Offset: down 5 rows, right 10 columns
+                //    var movedRanger = ranger.Offset(5, 10);
+                //    Assert.That(movedRanger.Address, Is.EqualTo("K7:M10"));
+                //    movedRanger.Value = "Moved";
+
+                package.SaveAs(new FileInfo(@""));
+                
             }
-            //FileInfo fi_ = new FileInfo(@"D:\für Arbeit\DmConverter\dmconverter\bin\Debug\File.xlsx");
-            //using (ExcelPackage excelPackage = new ExcelPackage(fi_))
-            //{
-            //    //Get a WorkSheet by index. Note that EPPlus indexes are base 1, not base 0!
-            //    ExcelWorksheet firstWorksheet = excelPackage.Workbook.Worksheets[1];
-            //    //Get a WorkSheet by name. If the worksheet doesn't exist, throw an exeption
-            //    ExcelWorksheet namedWorksheet = excelPackage.Workbook.Worksheets["SomeWorksheet"];
-            //    //If you don't know if a worksheet exists, you could use LINQ,
-            //    //So it doesn't throw an exception, but return null in case it doesn't find it
-            //    ExcelWorksheet anotherWorksheet =
-            //    excelPackage.Workbook.Worksheets.FirstOrDefault(x => x.Name == "SomeWorksheet");
-            //    //Get the content from cells A1 and B1 as string, in two different notations
-            //    string valA1 = firstWorksheet.Cells["A1"].Value.ToString();
-            //    string valB1 = firstWorksheet.Cells[1, 2].Value.ToString();
-            //    //Save your file
-            //    excelPackage.Save();
-            //}
-
-
-
-            //the path of the file
-            //string filePath = "O:\\Mitarbeiter\\Henninger, Dirk\\Allgemein\\Studenten\\Jihad\\!DM_Converter\\dmconverter\\bin\\DebugFile.xlsx";
-            
-            ////create a fileinfo object of an excel file on the disk
-            //FileInfo file = new FileInfo(filePath);
-            ////create a new Excel package from the file
-            //using (ExcelPackage excelPackage = new ExcelPackage(file))
-            //{
-            //    //create an instance of the the first sheet in the loaded file
-            //    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets[1];
-            //    //add some data
-            //    worksheet.Cells[1, 1].Value = "FeriTable1";
-            //    worksheet.Cells[1, 2].Value = "CoreSpec";
-            //    worksheet.Cells[1, 3].Value = "TimeSpecs";
-            //    worksheet.Cells[1, 4].Value = "Info";
-            //    worksheet.Cells[1, 5].Value = "Info";
-            //    worksheet.Cells[1, 6].Value = "Info";
-            //    worksheet.Cells[1, 6].Value = "TimeFrame";
-            //    worksheet.Cells[1, 6].Value = "DataSpecs";
-            //    worksheet.Cells[1, 6].Value = "DataSpec";
-            //    worksheet.Cells[1, 6].Value = "DataSpec";
-            //    worksheet.Cells[1, 6].Value = "End";
-
-            //    //save the changes
-            //    excelPackage.Save();
-            //}
-
-
-
-            //create a list to hold all the values
-            List<string> excelData = new List<string>();
-            //read the Excel file as byte array
-            byte[] bin = File.ReadAllBytes("O:\\Mitarbeiter\\Henninger, Dirk\\Allgemein\\Studenten\\Jihad\\!DM_Converter\\dmconverter\\bin\\Debug\\File.xlsx");
-            
-            //create a new Excel package in a memorystream
-            using (MemoryStream stream = new MemoryStream(bin))
-            using (ExcelPackage excelPackage = new ExcelPackage(stream))
-            {
-                //loop all worksheets
-                foreach (ExcelWorksheet worksheet in excelPackage.Workbook.Worksheets)
-                {
-                    //loop all rows
-                    for (int i = worksheet.Dimension.Start.Row; i <= worksheet.Dimension.End.Row; i++)
-                    {
-                        //loop all columns in a row
-                        for (int j = worksheet.Dimension.Start.Column; j <=
-                       worksheet.Dimension.End.Column; j++)
-                        {
-                            //add the cell data to the List
-                            if (worksheet.Cells[i, j].Value != null)
-                            {
-                                excelData.Add(worksheet.Cells[i, j].Value.ToString());
-                            }
-                        }
-                    }
-                }
-            }
-
+          
         }
     }
 }
