@@ -10,6 +10,12 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+using System.Collections.Generic;
+
+
 
 
 //https://itenium.be/blog/dotnet/create-xlsx-excel-with-epplus-csharp/
@@ -25,6 +31,11 @@ namespace dmconverter
             InitializeComponent();
 
         }
+        public class Result
+        {
+            public string Seies { get; set; }
+        }
+        
 
         public object Assert { get; private set; }
 
@@ -96,7 +107,7 @@ namespace dmconverter
 
                 //DM_web Excel Reading
 
-                String readfile = "O:\\Mitarbeiter\\Henninger, Dirk\\Allgemein\\Studenten\\Jihad\\!DM_Converter\\dmconverter\\DM_Web.xlsx";
+                String readfile = "D:\\für Arbeit\\DmConverter\\dmconverter\\DM_Web.xlsx";
 
                 FileInfo fileInfo = new FileInfo(readfile);
                 ExcelPackage package = new ExcelPackage(fileInfo);
@@ -105,56 +116,19 @@ namespace dmconverter
                 ExcelWorksheet WS_3 = package.Workbook.Worksheets[3];   //Select sheet für das Country als SeriesTitel && für SeriesSubtitle zu builden 
 
 
-               //WS_2.Cells["C2"].Copy(worksheet.Cells["C2"]);
+               //hier ist das Type Col or Row
                 worksheet.Cells["C2"].Value = "Type=" + WS_2.Cells["C2"].Value;
 
-                string input = WS_1.Cells["C5"].Text;
-                //input = input.Remove('');
-                JArray a = JArray.Parse(json);
 
 
-                FileInfo fi = new FileInfo(@"O:\Mitarbeiter\Henninger, Dirk\Allgemein\Studenten\Jihad\!DM_Converter\dmconverter\bin\Debug\File.xlsx");
-                    excelPackage.SaveAs(fi);
+                string jsonString = WS_1.Cells["C5"].Text.ToString();
+
+                
                 
 
+                FileInfo fi = new FileInfo(@"D:\für Arbeit\DmConverter\dmconverter\bin\Debug\File.xlsx");
+                    excelPackage.SaveAs(fi);
 
-
-                //    ExcelWorksheet sheet = package.Workbook.Worksheets.Add("MySheet");
-
-                //    // One cell
-                //    ExcelRange cellA2 = sheet.Cells["A2"];
-                //    var alsoCellA2 = sheet.Cells[2, 1];
-                //    Assert.That(cellA2.Address, Is.EqualTo("A2"));
-                //    Assert.That(cellA2.Address, Is.EqualTo(alsoCellA2.Address));
-
-                //    // Column from a cell
-                //    // ExcelRange.Start is the top and left most cell
-                //    Assert.That(cellA2.Start.Column, Is.EqualTo(1));
-                //    // To really get the column: sheet.Column(1)
-
-                //    // A range
-                //    ExcelRange ranger = sheet.Cells["A2:C5"];
-                //    var sameRanger = sheet.Cells[2, 1, 5, 3];
-                //    Assert.That(ranger.Address, Is.EqualTo(sameRanger.Address));
-
-                //    //sheet.Cells["A1,A4"] // Just A1 and A4
-                //    //sheet.Cells["1:1"] // A row
-                //    //sheet.Cells["A:B"] // Two columns
-
-                //    // Linq
-                //    var l = sheet.Cells["A1:A5"].Where(range => range.Comment != null);
-
-                //    // Dimensions used
-                //    Assert.That(sheet.Dimension, Is.Null);
-
-                //    ranger.Value = "pushing";
-                //    var usedDimensions = sheet.Dimension;
-                //    Assert.That(usedDimensions.Address, Is.EqualTo(ranger.Address));
-
-                //    // Offset: down 5 rows, right 10 columns
-                //    var movedRanger = ranger.Offset(5, 10);
-                //    Assert.That(movedRanger.Address, Is.EqualTo("K7:M10"));
-                //    movedRanger.Value = "Moved";
 
                 package.SaveAs(new FileInfo(@""));
                 
