@@ -14,6 +14,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 
 
@@ -31,16 +33,16 @@ namespace dmconverter
             InitializeComponent();
 
         }
-        public class Result
-        {
-            public string Seies { get; set; }
-        }
-        
+
 
         public object Assert { get; private set; }
+        List<string> listFiles = new List<string>();
 
         private void button1_Click(object sender, EventArgs e)
+
+
         {
+
 
             using (ExcelPackage excelPackage = new ExcelPackage())
             {
@@ -106,34 +108,96 @@ namespace dmconverter
                 worksheet.Cells["M8"].Value = "Precision";
 
                 //DM_web Excel Reading
-
-                String readfile = "D:\\für Arbeit\\DmConverter\\dmconverter\\DM_Web.xlsx";
-
-                FileInfo fileInfo = new FileInfo(readfile);
-                ExcelPackage package = new ExcelPackage(fileInfo);
-                ExcelWorksheet WS_1 = package.Workbook.Worksheets[1];   //Select sheet FeDaX_Spec
-                ExcelWorksheet WS_2 = package.Workbook.Worksheets[2];   //Select sheet FeDaX_Table
-                ExcelWorksheet WS_3 = package.Workbook.Worksheets[3];   //Select sheet für das Country als SeriesTitel && für SeriesSubtitle zu builden 
-
-
-               //hier ist das Type Col or Row
-                worksheet.Cells["C2"].Value = "Type=" + WS_2.Cells["C2"].Value;
-
+                if (listFiles.Count() == 0)
+                {
+                    MessageBox.Show("Bitte wählen Sie Datei/en!", "Fehler", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    //for (int i = 0; i <= listFiles.Count(); i++)
+                    List<string> seriesname = new List<string>();
+                    
+                    foreach (string listfile in listFiles)
+                    {
 
 
-                string jsonString = WS_1.Cells["C5"].Text.ToString();
+                            String readfile = listfile;
+                            FileInfo fileInfo = new FileInfo(readfile);
+                            ExcelPackage package = new ExcelPackage(fileInfo);
+                            ExcelWorksheet WS_1 = package.Workbook.Worksheets[1];   //Select sheet FeDaX_Spec
+                            ExcelWorksheet WS_2 = package.Workbook.Worksheets[2];   //Select sheet FeDaX_Table
+                            ExcelWorksheet WS_3 = package.Workbook.Worksheets[3];   //Select sheet für das Country als SeriesTitel && für SeriesSubtitle zu builden 
+                                                                                    //hier ist das Type Col or Row
 
-                
-                
-
-                FileInfo fi = new FileInfo(@"D:\für Arbeit\DmConverter\dmconverter\bin\Debug\File.xlsx");
-                    excelPackage.SaveAs(fi);
+                            worksheet.Cells["C2"].Value = "Type=" + WS_2.Cells["C2"].Value;
 
 
-                package.SaveAs(new FileInfo(@""));
-                
+                            string jsonString = WS_1.Cells["C5"].Text.ToString();
+                            getData(jsonString);
+
+                            //for (int n = 7; n <= WS_1.Cells.Count(); n++)
+
+                            //int lastRow = WS_1.Cells[7, 3].Where(cell => !cell.Value.ToString().Equals("")).Last().End.Row;
+
+                            for (int n = 7; n <= WS_1.Cells.Last().End.Row; n++)
+                            {
+
+                                if (WS_1.Cells.Text != null)
+                                {
+                                    string cellvalue = WS_1.Cells[n, 3].Value.ToString();
+                                    getData(cellvalue);
+                                    
+                                }
+
+                            }
+
+                        
+                        FileInfo fi = new FileInfo(@"D:\für Arbeit\DmConverter\dmconverter\bin\Debug\File.xlsx");
+                        excelPackage.SaveAs(fi);
+
+                        //MessageBox.Show("Die Konvertierung war erfolgreich!", "Fertig!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        
+                    }
+                    MessageBox.Show("Die Konvertierung war erfolgreich!", "Fertig!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                    
             }
-          
+        }
+
+   
+
+        public void getData(string json)
+        {
+
+            Spec jsonc = JsonConvert.DeserializeObject<Spec>(json);
+
+            string TargetFrequency = jsonc.TargetFrequency;
+            string PeriodsAscending = jsonc.PeriodsAscending;
+            string series = jsonc.SeriesName;
+            string TableName = jsonc.TableName;
+        }
+
+        private void SetText(string text)
+        {
+            dataGridView1.Text = text;
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string file in openFileDialog1.FileNames)
+                {
+                    listFiles.Add(file);
+                    dataGridView1.Rows.Add(file);
+                }
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.Application.ExitThread();
         }
     }
 }
