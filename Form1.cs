@@ -38,7 +38,7 @@ namespace dmconverter
         public object Assert { get; private set; }
         List<string> listFiles = new List<string>();
 
-        private void button1_Click(object sender, EventArgs e)
+        private void convert_button(object sender, EventArgs e)
 
 
         {
@@ -90,7 +90,11 @@ namespace dmconverter
                 worksheet.Cells["B6"].Value = "Type=Transform";
                 worksheet.Cells["B7"].Value = "Type=Customized";
                 worksheet.Cells["C5"].Value = "DataField=Description";
+
                 worksheet.Cells["C7"].Value = "TargetFrequency=Monthly";
+                worksheet.Cells["C7"].Value = "Type=" + WS_2.Cells["C2"].Value;
+
+
                 worksheet.Cells["D7"].Value = "PeriodsAscending=Yes";
 
                 worksheet.Cells["A8"].Value = "DataSpecs";
@@ -166,7 +170,7 @@ namespace dmconverter
 
    
 
-        public void getData(string json)
+        public static void getData(string json)
         {
 
             Spec jsonc = JsonConvert.DeserializeObject<Spec>(json);
@@ -175,6 +179,7 @@ namespace dmconverter
             string PeriodsAscending = jsonc.PeriodsAscending;
             string series = jsonc.SeriesName;
             string TableName = jsonc.TableName;
+            r TargetFrequency;
         }
 
         private void SetText(string text)
