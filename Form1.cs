@@ -179,7 +179,7 @@ namespace dmconverter
             string PeriodsAscending = jsonc.PeriodsAscending;
             string series = jsonc.SeriesName;
             string TableName = jsonc.TableName;
-            r TargetFrequency;
+            
         }
 
         private void SetText(string text)
